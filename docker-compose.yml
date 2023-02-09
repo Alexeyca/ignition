@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  ignition:
+    image: inductiveautomation/ignition:latest
+    command:
+      - "-n docker-test -a localhost -h 8088 -s 8043"
+    ports:
+      - "8088:8088"
+      - "8043:8043"
+    volumes:
+      - /private/var/lib/ignition/data:/var/lib/ignition/data
+    networks:
+      - ignition-network
+
+  dbpostgres:
+    image: postgres
+    volumes:
+      - /private/var/lib/postgresql:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pguser
+      POSTGRES_DB: pgdb
+    networks:
+      - ignition-network
+
+networks:
+  ignition-network:
